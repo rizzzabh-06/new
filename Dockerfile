@@ -7,7 +7,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci --only=production --frozen-lockfile
+# Install ALL dependencies (including devDependencies for build)
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -17,7 +18,7 @@ COPY . .
 
 # Disable telemetry for build
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_OPTIONS="--max-old-space-size=384"
+ENV NODE_OPTIONS="--max-old-space-size=512"
 
 RUN npm run build
 
