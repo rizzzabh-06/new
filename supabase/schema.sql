@@ -76,3 +76,22 @@ create index if not exists idx_writeups_slug on writeups(slug);
 create index if not exists idx_posts_published on posts(published);
 create index if not exists idx_posts_slug on posts(slug);
 create index if not exists idx_projects_category on projects(category);
+
+-- OSINT Tips table
+create table if not exists osint_tips (
+  id uuid primary key default uuid_generate_v4(),
+  indicator_type text not null check (indicator_type in ('domain', 'wallet', 'username', 'url')),
+  value text not null,
+  context text,
+  created_at timestamptz default now()
+);
+
+-- Enable Row Level Security for OSINT Tips
+alter table osint_tips enable row level security;
+
+-- Policies for OSINT Tips
+create policy "Allow public tip submission" on osint_tips 
+  for insert with check (true);
+
+create policy "Authenticated users view tips" on osint_tips 
+  for select using (auth.role() = 'authenticated');
