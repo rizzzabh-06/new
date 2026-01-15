@@ -36,7 +36,7 @@ cd /var/www/portfolio
 
 # Clone repository (update with your repo URL)
 if [ ! -d ".git" ]; then
-    git clone https://github.com/yourusername/portfolio-website.git .
+    git clone https://github.com/rizzzabh-06/new.git .
 else
     git pull origin main
 fi
